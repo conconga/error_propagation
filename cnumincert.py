@@ -1,5 +1,7 @@
 #####################################################
-## # ## ### < class: Propagacao de Erros> ### ## # ##
+## # ## ### < class: Error Propagation  > ### ## # ##
+## # ## ### < class: Uncertainty Prop.  > ### ## # ##
+#####################################################
 ## # ## ### < author: Luciano Kruk      > ### ## # ##
 #####################################################
 
@@ -13,7 +15,7 @@ class CNUMINCERT:
         self.x  = x
         self.dx = dx
 
-    #( --- adicao --- )#
+    #( --- sum --- )#
     def __add__(self, y):
         if isinstance(y, CNUMINCERT):
             ret = CNUMINCERT(self.x + y.x, m.sqrt(sum([i**2.0 for i in [self.dx, y.dx]])))
@@ -30,11 +32,11 @@ class CNUMINCERT:
         self.dx = q.dx
         return(self)
 
-    #( --- sinal negativo --- )#
+    #( --- negative signal --- )#
     def __neg__(self):
         return CNUMINCERT(-self.x, self.dx)
 
-    #( --- subtracao --- )#
+    #( --- difference --- )#
     def __sub__(self, y):
         if isinstance(y, CNUMINCERT):
             ret = CNUMINCERT(self.x - y.x, m.sqrt(sum([i**2.0 for i in [self.dx, y.dx]])))
@@ -51,7 +53,7 @@ class CNUMINCERT:
         self.dx = q.dx
         return(self)
 
-    #( --- multiplicacao --- )#
+    #( --- multiplication --- )#
     def __mul__(self, y):
         if isinstance(y, CNUMINCERT):
             q   = self.x * y.x
@@ -70,7 +72,7 @@ class CNUMINCERT:
         self.dx = q.dx
         return(self)
 
-    #( --- divisao --- )#
+    #( --- division --- )#
     def __truediv__(self, y):
         if isinstance(y, CNUMINCERT):
             q   = self.x / y.x
@@ -95,7 +97,7 @@ class CNUMINCERT:
         self.dx = q.dx
         return(self)
 
-    #( --- funcao generica --- )#
+    #( --- generic functions --- )#
     def function(self, fn):
         q  = fn(self.x)
         dq = self.dx * abs(misc.derivative(fn, q))
