@@ -1,6 +1,7 @@
 #####################################################
 ## # ## ### < class: Error Propagation  > ### ## # ##
 ## # ## ### < class: Uncertainty Prop.  > ### ## # ##
+## https://github.com/conconga/error_propagation/  ##
 #####################################################
 ## # ## ### < author: Luciano Kruk      > ### ## # ##
 #####################################################
@@ -14,6 +15,9 @@ class CNUMINCERT:
     def __init__(self, x, dx):
         self.x  = x
         self.dx = dx
+
+    def __repr__(self):
+        return "{:1.1e}+-{:1.1e}".format(self.x, self.dx)
 
     #( --- sum --- )#
     def __add__(self, y):
