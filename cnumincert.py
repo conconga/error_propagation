@@ -104,7 +104,7 @@ class CNUMINCERT:
     #( --- generic functions --- )#
     def function(self, fn):
         q  = fn(self.x)
-        dq = self.dx * abs(misc.derivative(fn, q))
+        dq = self.dx * abs(misc.derivative(fn, self.x))
         return CNUMINCERT(q, dq)
 
     #( --- miscelaneous --- )#
