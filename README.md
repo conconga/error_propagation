@@ -67,7 +67,7 @@ uncertainties. For example, when squaring a number, one could use either
 of both alternatives with random data with known statistical
 characteristics. At the end, the conclusion is clear: the best
 alternative is to propagate the uncertainties through nonlinear
-functions through the method `function()` to get the most accurate
+functions using the method `function()` to get the most accurate
 results.
 
         v       = 10
