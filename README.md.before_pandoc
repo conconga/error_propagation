@@ -9,28 +9,28 @@ There are several book about this topic. In Wikipedia one can find some overview
 the theory and a a table with the most relevant equations to effectively propagate
 uncertainties. See [Propagation of Uncertainty](https://en.wikipedia.org/wiki/Propagation_of_uncertainty).
 
-# `class CNUMINCERT`
+# `class knumuncert`
 
 ## to create numbers:
 ```
-a = CNUMINCERT(1,0.1) # the expected value for 'a' is 1.0, and its standard deviation is 0.1.
+a = knumuncert(1,0.1) # the expected value for 'a' is 1.0, and its standard deviation is 0.1.
 ```
 
 ## to perform mathematical operations (arithmetic):
 ```
-a = CNUMINCERT(1.0, 0.1)
-b = CNUMINCERT(1.0, 0.1)
+a = knumuncert(1.0, 0.1)
+b = knumuncert(1.0, 0.1)
 c = a + b
 c = a - b
 c = a * b * 3.3
 c = (a/b) + 7.0
-a += CNUMINCERT(10.0, 0.1)
+a += knumuncert(10.0, 0.1)
 ...
 ```
 
 ## to propagate uncertainty through nonlinear functions:
 ```
-a = CNUMINCERT(0.8, 0.01)
+a = knumuncert(0.8, 0.01)
 # b = sin(a)
 b = a.function( lambda x:sin(x) )
 # c = a**2
@@ -39,7 +39,7 @@ c = c.function( lambda x:x**2 )
 
 ## to display the numbers with a particular format:
 ```
-a = CNUMINCERT(0.8, 0.01)
+a = knumuncert(0.8, 0.01)
 print("{:1.02f}".format(a))
 ```
 
@@ -58,8 +58,8 @@ get the most accurate results.
     v_smp   = v + (sigma_v * np.random.randn(nb_smps))
     fn      = lambda x:x**2
     v_fn    = [fn(i) for i in v_smp]
-    v2_fn1  = CNUMINCERT(v, sigma_v).function(fn)
-    v2_fn2  = CNUMINCERT(v, sigma_v) * CNUMINCERT(v, sigma_v)
+    v2_fn1  = knumuncert(v, sigma_v).function(fn)
+    v2_fn2  = knumuncert(v, sigma_v) * knumuncert(v, sigma_v)
     print('lambda x:x**2')
     print("  from samples, fn(v)     = {:2.2f} +- {:2.2f}".format(fn(v), np.std(v_fn)))
     print("  from er_prop.function() = {:2.2f} +- {:2.2f}".format(v2_fn1.x, v2_fn1.dx))
