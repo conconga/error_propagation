@@ -63,12 +63,11 @@ Uncertainty](https://en.wikipedia.org/wiki/Propagation_of_uncertainty).
 
 Sometimes one has more than a single alternative to propagate
 uncertainties. For example, when squaring a number, one could use either
-`x*x` or `x<sup>2</sup>`. The following snippet simulates the adoption
-of both alternatives with random data with known statistical
-characteristics. At the end, the conclusion is clear: the best
-alternative is to propagate the uncertainties through nonlinear
-functions using the method `function()` to get the most accurate
-results.
+`x*x` or `x^2`. The following snippet simulates the adoption of both
+alternatives with random data with known statistical characteristics. At
+the end, the conclusion is clear: the best alternative is to propagate
+the uncertainties through nonlinear functions using the method
+`function()` to get the most accurate results.
 
         v       = 10
         sigma_v = 0.1
@@ -82,5 +81,3 @@ results.
         print("  from samples, fn(v)     = {:2.2f} +- {:2.2f}".format(fn(v), np.std(v_fn)))
         print("  from er_prop.function() = {:2.2f} +- {:2.2f}".format(v2_fn1.x, v2_fn1.dx))
         print("  from er_prop,   x * x   = {:2.2f} +- {:2.2f}".format(v2_fn2.x, v2_fn2.dx))
-
-\`\`\`
