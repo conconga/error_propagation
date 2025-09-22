@@ -12,7 +12,7 @@ import numpy      as np
 
 #####################################################
 
-class CNUMINCERT:
+class knumuncert:
     def __init__(self, x, dx):
         self.x  = x
         self.dx = dx
@@ -22,10 +22,10 @@ class CNUMINCERT:
 
     #( --- sum --- )#
     def __add__(self, y):
-        if isinstance(y, CNUMINCERT):
-            ret = CNUMINCERT(self.x + y.x, m.sqrt(sum([i**2.0 for i in [self.dx, y.dx]])))
+        if isinstance(y, self.__class__):
+            ret = self.__class__(self.x + y.x, m.sqrt(sum([i**2.0 for i in [self.dx, y.dx]])))
         else:
-            ret = CNUMINCERT(self.x + y, self.dx)
+            ret = self.__class__(self.x + y, self.dx)
         return ret
 
     def __radd__(self, y):
@@ -39,18 +39,18 @@ class CNUMINCERT:
 
     #( --- negative signal --- )#
     def __neg__(self):
-        return CNUMINCERT(-self.x, self.dx)
+        return self.__class__(-self.x, self.dx)
 
     #( --- difference --- )#
     def __sub__(self, y):
-        if isinstance(y, CNUMINCERT):
-            ret = CNUMINCERT(self.x - y.x, m.sqrt(sum([i**2.0 for i in [self.dx, y.dx]])))
+        if isinstance(y, self.__class__):
+            ret = self.__class__(self.x - y.x, m.sqrt(sum([i**2.0 for i in [self.dx, y.dx]])))
         else:
-            ret = CNUMINCERT(self.x - y, self.dx)
+            ret = self.__class__(self.x - y, self.dx)
         return ret
 
     def __rsub__(self, y):
-        return y+CNUMINCERT(-self.x, self.dx)
+        return y+self.__class__(-self.x, self.dx)
 
     def __isub__(self, y): # -=
         q       = self.__sub__(y)
@@ -60,12 +60,12 @@ class CNUMINCERT:
 
     #( --- multiplication --- )#
     def __mul__(self, y):
-        if isinstance(y, CNUMINCERT):
+        if isinstance(y, self.__class__):
             q   = self.x * y.x
             dq  = abs(q) * m.sqrt(sum([i**2.0 for i in [self.dx/self.x, y.dx/y.x]]))
-            ret = CNUMINCERT(q, dq)
+            ret = self.__class__(q, dq)
         else:
-            ret = self.__mul__(CNUMINCERT(y,0))
+            ret = self.__mul__(self.__class__(y,0))
         return ret
 
     def __rmul__(self, y):
@@ -79,21 +79,21 @@ class CNUMINCERT:
 
     #( --- division --- )#
     def __truediv__(self, y):
-        if isinstance(y, CNUMINCERT):
+        if isinstance(y, self.__class__):
             q   = self.x / y.x
             dq  = abs(q) * m.sqrt(sum([i**2.0 for i in [self.dx/self.x, y.dx/y.x]]))
-            ret = CNUMINCERT(q, dq)
+            ret = self.__class__(q, dq)
         else:
-            ret = self.__truediv__(CNUMINCERT(y, 0))
+            ret = self.__truediv__(self.__class__(y, 0))
         return ret
 
     def __rtruediv__(self, y):
-        if isinstance(y, CNUMINCERT):
+        if isinstance(y, self.__class__):
             q   = y.x / self.x
             dq  = abs(q) * m.sqrt(sum([i**2.0 for i in [self.dx/self.x, y.dx/y.x]]))
-            ret = CNUMINCERT(q, dq)
+            ret = self.__class__(q, dq)
         else:
-            ret = self.__truediv__(CNUMINCERT(y, 0))
+            ret = self.__truediv__(self.__class__(y, 0))
         return ret
 
     def __itruediv__(self, y): # /=
@@ -106,11 +106,11 @@ class CNUMINCERT:
     def function(self, fn):
         q  = fn(self.x)
         dq = self.dx * abs(misc.derivative(fn, self.x))
-        return CNUMINCERT(q, dq)
+        return self.__class__(q, dq)
 
     #( --- miscelaneous --- )#
     def __abs__(self):
-        return CNUMINCERT(abs(self.x), self.dx)
+        return self.__class__(abs(self.x), self.dx)
 
     #( --- formatting --- )#
     def __format__(self, fmt):
@@ -120,8 +120,8 @@ class CNUMINCERT:
 
 #####################################################
 if __name__ == "__main__":
-    a = CNUMINCERT(1,0.1)
-    b = CNUMINCERT(2,0.1)
+    a = knumuncert(1,0.1)
+    b = knumuncert(2,0.1)
     c = 3
 
     print("a = {:1.02f}".format(a))
@@ -184,8 +184,8 @@ if __name__ == "__main__":
         if i == 0:
             fn      = lambda x:x**2
             v_fn    = [fn(i) for i in v_smp]
-            v2_fn1  = CNUMINCERT(v, sigma_v).function(fn)
-            v2_fn2  = CNUMINCERT(v, sigma_v) * CNUMINCERT(v, sigma_v)
+            v2_fn1  = knumuncert(v, sigma_v).function(fn)
+            v2_fn2  = knumuncert(v, sigma_v) * knumuncert(v, sigma_v)
             print('lambda x:x**2')
             print("  from samples, fn(v)     = {:2.2f} +- {:2.2f}".format(fn(v), np.std(v_fn)))
             print("  from er_prop.function() = {:2.2f} +- {:2.2f}".format(v2_fn1.x, v2_fn1.dx))
@@ -195,8 +195,8 @@ if __name__ == "__main__":
         elif i == 1:
             fn      = lambda x:x**3
             v_fn    = [fn(i) for i in v_smp]
-            v2_fn1  = CNUMINCERT(v, sigma_v).function(fn)
-            v2_fn2  = CNUMINCERT(v, sigma_v) * CNUMINCERT(v, sigma_v) * CNUMINCERT(v, sigma_v)
+            v2_fn1  = knumuncert(v, sigma_v).function(fn)
+            v2_fn2  = knumuncert(v, sigma_v) * knumuncert(v, sigma_v) * knumuncert(v, sigma_v)
             print('lambda x:x**3')
             print("  from samples, fn(v)     = {:2.2f} +- {:2.2f}".format(fn(v), np.std(v_fn)))
             print("  from er_prop.function() = {:2.2f} +- {:2.2f}".format(v2_fn1.x, v2_fn1.dx))
