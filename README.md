@@ -1,6 +1,86 @@
 -   [<span class="toc-section-number">1</span>
-    error_propagation](#error_propagation)
+    Introduction](#introduction)
+-   [<span class="toc-section-number">2</span>
+    `class knumuncert`](#class-knumuncert)
+    -   [<span class="toc-section-number">2.1</span> to create
+        numbers:](#to-create-numbers)
+    -   [<span class="toc-section-number">2.2</span> to perform
+        mathematical operations
+        (arithmetic):](#to-perform-mathematical-operations-arithmetic)
+    -   [<span class="toc-section-number">2.3</span> to propagate
+        uncertainty through nonlinear
+        functions:](#to-propagate-uncertainty-through-nonlinear-functions)
+    -   [<span class="toc-section-number">2.4</span> to display the
+        numbers with a particular
+        format:](#to-display-the-numbers-with-a-particular-format)
+-   [<span class="toc-section-number">3</span> comments on nonlinear
+    operations:](#comments-on-nonlinear-operations)
 
-# error_propagation
+# Introduction
 
-Error Propagation / Propagation of Uncertainties
+This package implements an object to handle mathematical operations on
+values (float) with uncertainties. This is called “error propagation”.
+
+Each value is represented by its expectation plus/minus its uncertainty
+(one sigma), as `value +/- sigma`.
+
+There are several book about this topic. In Wikipedia one can find some
+overview on the theory and a a table with the most relevant equations to
+effectively propagate uncertainties. See [Propagation of
+Uncertainty](https://en.wikipedia.org/wiki/Propagation_of_uncertainty).
+
+# `class knumuncert`
+
+## to create numbers:
+
+    a = knumuncert(1,0.1) # the expected value for 'a' is 1.0, and its standard deviation is 0.1.
+
+## to perform mathematical operations (arithmetic):
+
+    a = knumuncert(1.0, 0.1)
+    b = knumuncert(1.0, 0.1)
+    c = a + b
+    c = a - b
+    c = a * b * 3.3
+    c = (a/b) + 7.0
+    a += knumuncert(10.0, 0.1)
+    ...
+
+## to propagate uncertainty through nonlinear functions:
+
+    a = knumuncert(0.8, 0.01)
+    # b = sin(a)
+    b = a.function( lambda x:sin(x) )
+    # c = a**2
+    c = c.function( lambda x:x**2 )
+
+## to display the numbers with a particular format:
+
+    a = knumuncert(0.8, 0.01)
+    print("{:1.02f}".format(a))
+
+# comments on nonlinear operations:
+
+Sometimes one has more than a single alternative to propagate
+uncertainties. For example, when squaring a number, one could use either
+`x*x` or `x<sup>2</sup>`. The following snippet simulates the adoption
+of both alternatives with random data with known statistical
+characteristics. At the end, the conclusion is clear: the best
+alternative is to propagate the uncertainties through nonlinear
+functions through the method `function()` to get the most accurate
+results.
+
+        v       = 10
+        sigma_v = 0.1
+        nb_smps = 10000
+        v_smp   = v + (sigma_v * np.random.randn(nb_smps))
+        fn      = lambda x:x**2
+        v_fn    = [fn(i) for i in v_smp]
+        v2_fn1  = knumuncert(v, sigma_v).function(fn)
+        v2_fn2  = knumuncert(v, sigma_v) * knumuncert(v, sigma_v)
+        print('lambda x:x**2')
+        print("  from samples, fn(v)     = {:2.2f} +- {:2.2f}".format(fn(v), np.std(v_fn)))
+        print("  from er_prop.function() = {:2.2f} +- {:2.2f}".format(v2_fn1.x, v2_fn1.dx))
+        print("  from er_prop,   x * x   = {:2.2f} +- {:2.2f}".format(v2_fn2.x, v2_fn2.dx))
+
+\`\`\`
