@@ -6,7 +6,7 @@
 ## # ## ### < author: Luciano Kruk      > ### ## # ##
 #####################################################
 
-import scipy.misc as misc
+import scipy.differentiate as misc
 import math       as m
 import numpy      as np
 
@@ -104,8 +104,10 @@ class knumuncert:
 
     #( --- generic functions --- )#
     def function(self, fn):
-        q  = fn(self.x)
-        dq = self.dx * abs(misc.derivative(fn, self.x))
+        q    = fn(self.x)
+        dfdx = misc.derivative(fn, self.x)
+        assert dfdx.success
+        dq   = self.dx * abs(dfdx.df)
         return self.__class__(q, dq)
 
     #( --- miscelaneous --- )#
