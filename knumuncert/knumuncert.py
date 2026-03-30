@@ -6,9 +6,9 @@
 ## # ## ### < author: Luciano Kruk      > ### ## # ##
 #####################################################
 
-import scipy.misc as misc
 import math       as m
 import numpy      as np
+from scipy.differentiate import derivative
 
 #####################################################
 
@@ -104,8 +104,17 @@ class knumuncert:
 
     #( --- generic functions --- )#
     def function(self, fn):
-        q  = fn(self.x)
-        dq = self.dx * abs(misc.derivative(fn, self.x))
+        """
+        The function 'fn' shall support its calculation with arrays. The numerical
+        derivative of 'fn' will call it with arrays in the input.
+        """
+        q   = fn(self.x)
+        ret = derivative(fn, self.x)
+        if ret['success']:
+            dq = self.dx * abs(ret['df'])
+        else:
+            raise ValueError('the derivative did not converge')
+
         return self.__class__(q, dq)
 
     #( --- miscelaneous --- )#
