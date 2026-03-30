@@ -68,17 +68,23 @@ get the most accurate results.
 # ground truth:
 val         = 10.0
 val_std     =  0.1
+
 # simulation: draw nb_samples with mean=val and std=val_std:
 nb_samples  = 10000
 val_samples = val + (val_std * np.random.randn(nb_samples))
+
 # nonlinear function:
 fn          = lambda x:x**2
+
 # alternative 1: samples through the nonlinear function:
 y_samples   = [fn(i) for i in val_samples]
+
 # alternative 2: using knumuncert.function() to propagate the nonlinearity:
 y_function  = knumuncert(val, val_std).function(fn)
+
 # alternative 3: direct product of two values with uncertainty:
 y_prod      = knumuncert(val, val_std) * knumuncert(val, val_std)
+
 # printing the results:
 print(f'Function: y = x^2')
 print(f'  1) from {nb_samples} through the nonlinear function: {knumuncert(fn(val), np.std(y_samples)):2.2f}')
