@@ -100,7 +100,7 @@ the uncertainties through nonlinear functions using the method
 
 with this output:
 
-> Function: y = x^2 1) from 10000 through the nonlinear function:
-> (100.00 +- 2.00) 2) using the rules of error propagation through
-> nonlinear functions: (100.00 +- 2.00) 3) using basic rules (product)
-> of error propagation: (100.00 +- 1.41)
+    Function: y = x^2
+      1) from 10000 through the nonlinear function:                        (100.00 +- 2.00)
+      2) using the rules of error propagation through nonlinear functions: (100.00 +- 2.00)
+      3) using basic rules (product) of error propagation:                 (100.00 +- 1.41)
