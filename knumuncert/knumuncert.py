@@ -167,7 +167,7 @@ if __name__ == "__main__":
 
     print()
     print("a*b/2 = {:1.02f}".format(a*b/2.0))
-    print("sin(a*b/2) = {:1.02f}".format((a*b/2.0).function(lambda x:m.sin(x))))
+    print("sin(a*b/2) = {:1.02f}".format((a*b/2.0).function(lambda x:np.sin(x))))
 
     # operacoes:
     print()
