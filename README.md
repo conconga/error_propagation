@@ -1,20 +1,20 @@
--   [<span class="toc-section-number">1</span>
-    Introduction](#introduction)
--   [<span class="toc-section-number">2</span>
-    `class knumuncert`](#class-knumuncert)
-    -   [<span class="toc-section-number">2.1</span> to create
-        numbers:](#to-create-numbers)
-    -   [<span class="toc-section-number">2.2</span> to perform
-        mathematical operations
-        (arithmetic):](#to-perform-mathematical-operations-arithmetic)
-    -   [<span class="toc-section-number">2.3</span> to propagate
-        uncertainty through nonlinear
-        functions:](#to-propagate-uncertainty-through-nonlinear-functions)
-    -   [<span class="toc-section-number">2.4</span> to display the
-        numbers with a particular
-        format:](#to-display-the-numbers-with-a-particular-format)
--   [<span class="toc-section-number">3</span> comments on nonlinear
-    operations:](#comments-on-nonlinear-operations)
+- [<span class="toc-section-number">1</span>
+  Introduction](#introduction)
+- [<span class="toc-section-number">2</span>
+  `class knumuncert`](#class-knumuncert)
+  - [<span class="toc-section-number">2.1</span> to create
+    numbers:](#to-create-numbers)
+  - [<span class="toc-section-number">2.2</span> to perform mathematical
+    operations
+    (arithmetic):](#to-perform-mathematical-operations-arithmetic)
+  - [<span class="toc-section-number">2.3</span> to propagate
+    uncertainty through nonlinear
+    functions:](#to-propagate-uncertainty-through-nonlinear-functions)
+  - [<span class="toc-section-number">2.4</span> to display the numbers
+    with a particular
+    format:](#to-display-the-numbers-with-a-particular-format)
+- [<span class="toc-section-number">3</span> comments on nonlinear
+  operations:](#comments-on-nonlinear-operations)
 
 # Introduction
 
@@ -53,6 +53,10 @@ Uncertainty](https://en.wikipedia.org/wiki/Propagation_of_uncertainty).
 
 ## to propagate uncertainty through nonlinear functions:
 
+**Remark**: the function shall allow inputs as arrays. The calculation
+of the derivative is numerical, and the algorithm will call it with
+arrays in the input.
+
     a = knumuncert(0.8, 0.01)
     # b = sin(a)
     b = a.function( lambda x:sin(x) )
@@ -74,15 +78,29 @@ the end, the conclusion is clear: the best alternative is to propagate
 the uncertainties through nonlinear functions using the method
 `function()` to get the most accurate results.
 
-        v       = 10
-        sigma_v = 0.1
-        nb_smps = 10000
-        v_smp   = v + (sigma_v * np.random.randn(nb_smps))
-        fn      = lambda x:x**2
-        v_fn    = [fn(i) for i in v_smp]
-        v2_fn1  = knumuncert(v, sigma_v).function(fn)
-        v2_fn2  = knumuncert(v, sigma_v) * knumuncert(v, sigma_v)
-        print('lambda x:x**2')
-        print("  from samples, fn(v)     = {:2.2f} +- {:2.2f}".format(fn(v), np.std(v_fn)))
-        print("  from er_prop.function() = {:2.2f} +- {:2.2f}".format(v2_fn1.x, v2_fn1.dx))
-        print("  from er_prop,   x * x   = {:2.2f} +- {:2.2f}".format(v2_fn2.x, v2_fn2.dx))
+    # ground truth:
+    val         = 10.0
+    val_std     =  0.1
+    # simulation: draw nb_samples with mean=val and std=val_std:
+    nb_samples  = 10000
+    val_samples = val + (val_std * np.random.randn(nb_samples))
+    # nonlinear function:
+    fn          = lambda x:x**2
+    # alternative 1: samples through the nonlinear function:
+    y_samples   = [fn(i) for i in val_samples]
+    # alternative 2: using knumuncert.function() to propagate the nonlinearity:
+    y_function  = knumuncert(val, val_std).function(fn)
+    # alternative 3: direct product of two values with uncertainty:
+    y_prod      = knumuncert(val, val_std) * knumuncert(val, val_std)
+    # printing the results:
+    print(f'Function: y = x^2')
+    print(f'  1) from {nb_samples} through the nonlinear function: {knumuncert(fn(val), np.std(y_samples)):2.2f}')
+    print(f'  2) using the rules of error propagation through nonlinear functions: {y_function:2.2f}')
+    print(f'  3) using basic rules (product) of error propagation: {y_prod:2.2f}')
+
+with this output:
+
+> Function: y = x^2 1) from 10000 through the nonlinear function:
+> (100.00 +- 2.00) 2) using the rules of error propagation through
+> nonlinear functions: (100.00 +- 2.00) 3) using basic rules (product)
+> of error propagation: (100.00 +- 1.41)
