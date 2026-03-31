@@ -13,6 +13,8 @@
   - [<span class="toc-section-number">2.4</span> to display the numbers
     with a particular
     format:](#to-display-the-numbers-with-a-particular-format)
+  - [<span class="toc-section-number">2.5</span> to create a copy of the
+    current object:](#to-create-a-copy-of-the-current-object)
 - [<span class="toc-section-number">3</span> comments on nonlinear
   operations:](#comments-on-nonlinear-operations)
 
@@ -67,6 +69,10 @@ arrays in the input.
 
     a = knumuncert(0.8, 0.01)
     print("{:1.02f}".format(a))
+
+## to create a copy of the current object:
+
+    b = a.copy()
 
 # comments on nonlinear operations:
 

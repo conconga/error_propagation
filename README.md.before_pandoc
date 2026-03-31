@@ -54,6 +54,11 @@ a = knumuncert(0.8, 0.01)
 print("{:1.02f}".format(a))
 ```
 
+## to create a copy of the current object:
+```
+b = a.copy()
+```
+
 # comments on nonlinear operations:
 Sometimes one has more than a single alternative to propagate uncertainties.
 For example, when squaring a number, one could use either `x*x` or
