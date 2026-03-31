@@ -94,7 +94,7 @@ class knumuncert:
             dq  = abs(q) * m.sqrt(sum([i**2.0 for i in [self.dx/self.x, y.dx/y.x]]))
             ret = self.__class__(q, dq)
         else:
-            ret = self.__truediv__(self.__class__(y, 0))
+            ret = self.__class__(y,0) / self
         return ret
 
     def __itruediv__(self, y): # /=
