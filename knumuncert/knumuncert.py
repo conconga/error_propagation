@@ -126,6 +126,9 @@ class knumuncert:
     def __format__(self, fmt):
         return "({{:{:s}}} +- {{:{:s}}})".format(fmt, fmt).format(self.x, self.dx)
 
+    #( --- copy --- )#
+    def copy(self):
+        return self.__class__(self.x, self.dx)
 
 
 #####################################################
