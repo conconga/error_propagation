@@ -14,6 +14,7 @@ from scipy.differentiate import derivative
 
 class knumuncert:
     def __init__(self, x, dx):
+        assert dx is not None
         self.x  = x
         self.dx = dx
 
